@@ -5,26 +5,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     ListView listview;
 
-    ArrayAdapter<String> adapter;
+    resAdapter adapter;
 
-    TextView tv;
+    EditText tv;
 
     int Addition = 1;
 
     ArrayList<restaurant> storage = new ArrayList<>();
-    ArrayList<String> title = new ArrayList<>();
 
+    Button btn1, btn2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,9 +40,15 @@ public class MainActivity extends AppCompatActivity {
 
     void init(){
         listview = (ListView)findViewById(R.id.listview);
-        tv = (TextView)findViewById(R.id.tv);
+        tv = (EditText) findViewById(R.id.tv);
 
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, title);
+        adapter = new resAdapter(storage,this);
+        String[] menu = {"123","123","123"};
+
+        storage.add(new restaurant("feff","2222","11111","11111",menu,1));
+        storage.add(new restaurant("ccc","5555","11111","11111",menu,3));
+        storage.add(new restaurant("ddqwd","33333","11111","11111",menu,2));
+        storage.add(new restaurant("BBQ","111111","11111","11111",menu,1));
 
         listview.setAdapter(adapter);
 
@@ -59,10 +68,8 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                title.remove(position);
                                 storage.remove(position);
                                 adapter.notifyDataSetChanged();
-                                tv.setText("맛집 리스트("+title.size()+"개)");
                             }
                         }).show();
                 return true;
@@ -79,12 +86,43 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        tv.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     public void onClick(View v){
-        Intent intent = new Intent(this, Main2Activity.class);
+        if (v.getId() == R.id.btn1) {
+            Intent intent = new Intent(this, Main2Activity.class);
+            startActivityForResult(intent, Addition);
+        }else if(v.getId() == R.id.btn2){
+            adapter.setSort(adapter.NAME_ASC);
+        }else if(v.getId() == R.id.btn3){
+            adapter.setSort(adapter.TYPE_ASC);
+        }else if(v.getId() == R.id.btn4){
+            for(int i = 0 ; i < storage.size(); i++){
+                View child = listview.getChildAt(i);
+                CheckBox cb = (CheckBox)child.findViewById(R.id.checkBox);
+                cb.setVisibility(View.GONE);
 
-        startActivityForResult(intent, Addition);
+            }
+        }else{
+
+        }
     }
 
     @Override
@@ -92,11 +130,11 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == Addition){
             if(resultCode == RESULT_OK){
                 restaurant r = data.getParcelableExtra("restaurant");
-                title.add(r.getName());
                 storage.add(r);
                 adapter.notifyDataSetChanged();
-                tv.setText("맛집 리스트("+title.size()+"개)");
             }
         }
     }
+
+
 }

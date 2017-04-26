@@ -92,8 +92,8 @@ public class resAdapter extends BaseAdapter {
         else checkBox.setVisibility(View.GONE);
 
         if (datalist.get(i).getType() == 1) img.setImageResource(R.drawable.chicken);
-        else if (datalist.get(i).getType() == 2) img.setImageResource(R.drawable.hamburger);
-        else img.setImageResource(R.drawable.pizza);
+        else if (datalist.get(i).getType() == 2) img.setImageResource(R.drawable.pizza);
+        else img.setImageResource(R.drawable.hamburger);
 
         txt1.setText(datalist.get(i).getName());
         txt2.setText(datalist.get(i).getTell());

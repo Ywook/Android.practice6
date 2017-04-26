@@ -10,7 +10,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -27,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<restaurant> storage = new ArrayList<>();
 
-    Button btn1, btn2;
+    Button btn1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     void init(){
         listview = (ListView)findViewById(R.id.listview);
         tv = (EditText) findViewById(R.id.tv);
+
+        btn1 = (Button)findViewById(R.id.btn4);
 
         adapter = new resAdapter(storage,this);
         String[] menu = {"123","123","123"};
@@ -100,7 +101,24 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                String search = editable.toString();
 
+                adapter.searchList(search);
+            }
+        });
+
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(btn1.getText().toString().equals("선택")){
+                    btn1.setText("삭제");
+                    adapter.setCheckBox(true);
+
+                }else{
+                    btn1.setText("선택");
+                    adapter.deleteList();
+                    adapter.setCheckBox(false);
+                }
             }
         });
     }
@@ -113,15 +131,6 @@ public class MainActivity extends AppCompatActivity {
             adapter.setSort(adapter.NAME_ASC);
         }else if(v.getId() == R.id.btn3){
             adapter.setSort(adapter.TYPE_ASC);
-        }else if(v.getId() == R.id.btn4){
-            for(int i = 0 ; i < storage.size(); i++){
-                View child = listview.getChildAt(i);
-                CheckBox cb = (CheckBox)child.findViewById(R.id.checkBox);
-                cb.setVisibility(View.GONE);
-
-            }
-        }else{
-
         }
     }
 
@@ -131,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK){
                 restaurant r = data.getParcelableExtra("restaurant");
                 storage.add(r);
+                adapter.changeInit();
                 adapter.notifyDataSetChanged();
             }
         }

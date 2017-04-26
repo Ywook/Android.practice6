@@ -11,6 +11,16 @@ public class restaurant implements Parcelable {
     private String name, homepage ,tell, date;
     private String[] menu = new String[3];
     private int type;
+    private Boolean checked = false;
+
+    public restaurant(restaurant r){
+        this.name = r.getName();
+        this.homepage = r.getHomepage();
+        this.tell = r.getTell();
+        this.menu = r.getMenu();
+        this.type = r.getType();
+        this.checked = r.getChecked();
+    }
 
     public restaurant(String name, String homepage, String tell, String date, String[] menu, int type) {
         this.name = name;
@@ -19,6 +29,15 @@ public class restaurant implements Parcelable {
         this.date = date;
         this.menu = menu;
         this.type = type;
+        this.checked = false;
+    }
+
+    public Boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
     }
 
     protected restaurant(Parcel in) {
